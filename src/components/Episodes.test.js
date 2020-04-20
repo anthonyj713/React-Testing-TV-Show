@@ -48,15 +48,11 @@ test('Episodes render without errors', () => {
     render(<Episodes episodes={[]} />)
 });
 
-test('')
 
-// test('renders cards to screen', async () => {
-//     const { queryAllByTestId, rerender } = render(<Episodes episodes={[]} />)
+test('renders cards to screen', async () => {
+    const { queryAllByTestId, rerender, getByText } = render(<Episodes episodes={[]} />)
        
-//     await waitFor(() => {
-//         queryAllByTestId(/cards/i)
-//     });
-//     expect(queryAllByTestId(/cards/i)).toHaveLength(0);
-//     rerender(<Episodes episodes={mockEpisodes} />)
-//     expect(queryAllByTestId(/cards/i)).toHaveLength(3);
-// });
+    expect(queryAllByTestId(/cards/i)).toHaveLength(0);
+    rerender(<Episodes episodes={mockEpisodes} />)
+    expect(queryAllByTestId(/cards/i)).toHaveLength(3);
+}); 
