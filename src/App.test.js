@@ -1,8 +1,12 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import Episodes from  './Episodes';
+import App from './App';
+import { fetchShow as mockFetchShow } from './api/fetchShow';
 
-const mockEpisodes = [
+
+jest.mock('./components/fetchShow')
+
+const mockData = [
     {
     id: 553946,
     url: "http://www.tvmaze.com/episodes/553946/stranger-things-1x01-chapter-one-the-vanishing-of-will-byers",
@@ -20,7 +24,7 @@ const mockEpisodes = [
     id: 578663,
     url: "http://www.tvmaze.com/episodes/578663/stranger-things-1x02-chapter-two-the-weirdo-on-maple-street",
     name: "Chapter Two: The Weirdo on Maple Street",
-    season: 1,
+    season: 3,
     number: 2,
     airdate: "2016-07-15",
     airtime: "",
@@ -33,7 +37,7 @@ const mockEpisodes = [
     id: 578664,
     url: "http://www.tvmaze.com/episodes/578664/stranger-things-1x03-chapter-three-holly-jolly",
     name: "Chapter Three: Holly, Jolly",
-    season: 1,
+    season: 2,
     number: 3,
     airdate: "2016-07-15",
     airtime: "",
@@ -44,15 +48,17 @@ const mockEpisodes = [
     }
     ];
 
-test('Episodes render without errors', () => {
-    render(<Episodes episodes={[]} />)
-});
-
-
-test('renders cards to screen', async () => {
-    const { queryAllByTestId, rerender } = render(<Episodes episodes={[]} />)
-       
-    expect(queryAllByTestId(/cards/i)).toHaveLength(0);
-    rerender(<Episodes episodes={mockEpisodes} />)
-    expect(queryAllByTestId(/cards/i)).toHaveLength(3);
-}); 
+    test('renders dropdown menu', async () => {
+        console.log('mockData', mockData);
+        mockFetchShow.mockResolvedValueOnce(mockData)
+    
+        const { queryAllByText, getByText } = render (<App />)
+    
+        await waitFor(() => {
+            getByText(/select a season/i)
+        })
+    
+        userEvent.click(getByText(/select a season/i))
+        expect(queryAllByText(/season/i)).toHaveLength(3)
+    });
+    
